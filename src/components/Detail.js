@@ -13,6 +13,13 @@ class Detail extends Component{
     }
 
     favoriteCity(){
+        var cities = localStorage.getItem("city").split(" ");
+        var cityInString = "";
+        for(var i = 0; i<cities.length; i++){
+            cityInString += " ", cities[i];
+        }
+        cityInString += this.props.location.state.id;
+        localStorage.setItem("city", cityInString);
     }
 
 
