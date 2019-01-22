@@ -14,10 +14,36 @@ class Main extends Component{
         this.onChange = this.onChange.bind(this);
         this.state = {
             city: '',
-            id: ''
+            id: '',
+            fav: {city:'', temp:''}
         };
       }
 
+      componentDidMount() {
+          if(localStorage.getItem("city")!==null){
+            var citiesInString = localStorage.getItem("city");
+            var citiesInArray = citiesInString.split(" ");
+            for(var i = 0; i<citiesInArray.length;i++){
+                if(citiesInArray[i]===" " || citiesInArray[i]===""){
+                    citiesInArray.splice(i,1);
+                }
+            }
+
+            if(citiesInArray.length>0){
+                for(var i = 0; i<this.state.fav.length; i++){
+                    var url = "http://api.openweathermap.org/data/2.5/forecast?id="+this.state.fav[i]+"&APPID="+apiKey+"&units=metric";
+                    axios.get(url)
+                    .then(function(res){
+                        document.getElementById(this.state.fav[i]).innerHTML = res.data["city"]["name"] + ", " + res.data["list"][0]["main"]["temp"];
+                    })
+                    .catch(err=>{
+                        console.log(err)
+                    })                
+                }
+              }
+              this.setState({fav: citiesInArray});
+          }
+      }
 
     onChange (e) {
         const state = this.state;
@@ -52,16 +78,31 @@ class Main extends Component{
             }
     }
     render(){
+
         return(
             <div>
                 <input name="city" id="city" onChange={this.onChange}></input>
                 <button onClick={this.getData}>Search</button>                
-                <div id="result">Here comes the result</div>
+                
                 <Switch>
                     <Route path="/detail" exact component={Detail}/>
                 </Switch>
-                <Link to={{pathname:'/detail', state:{id: this.state.id}}}>Detail</Link>
+                <Link to={{pathname:'/detail', state:{id: this.state.id}}}><div title="Click Here to check detail" id="result">Here comes the result</div></Link>
+
+                <br/>
+                <div>
+                    {this.state.fav.length > 0 ? this.state.fav.map(city => (
+                        <div>
+                            <div className="row justify-content-center">
+                                <div className="col-3">
+                                <Link to={{pathname:'/detail', state:{id: city}}}><div title="Click Here to check detail" id={city}>{city}</div></Link>
+                                </div>
+                            </div>
+                        </div>
+                    )):<div></div>}
+                </div>
             </div>
+            
         )
     }
 }

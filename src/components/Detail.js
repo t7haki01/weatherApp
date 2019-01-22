@@ -8,18 +8,26 @@ const apiKey = "8aa27dc6b9e28772922e2b6bb363e3d2";
 
 class Detail extends Component{
     constructor(props) {
-        this.favoriteCity = this.favoriteCity.bind(this);
         super(props);
+        this.checkBox = this.checkBox.bind(this)
     }
 
-    favoriteCity(){
-        var cities = localStorage.getItem("city").split(" ");
-        var cityInString = "";
-        for(var i = 0; i<cities.length; i++){
-            cityInString += " ", cities[i];
-        }
-        cityInString += this.props.location.state.id;
-        localStorage.setItem("city", cityInString);
+   checkBox(){
+            if(localStorage.getItem("city")!==null){
+                var cities = localStorage.getItem("city").split(" ");
+                var cityInString = "";
+                for(var i = 0; i<cities.length; i++){
+                    var fav = cities[i] + " ";
+                    cityInString += fav;
+                }
+                cityInString = cityInString + " " + this.props.location.state.id;
+                localStorage.setItem("city", cityInString);
+            }
+            else{
+                var fav = this.props.location.state.id + " ";
+                localStorage.setItem("city", fav);
+            }
+        
     }
 
 
@@ -89,8 +97,8 @@ class Detail extends Component{
                             <div className="col" id="humidity">
                             Humidity:
                             </div>
-                        </div>
-                    <input type="checkbox" onChange={this.favoriteCity}>Click Here to check as favorite</input>
+                        </div>Click Here to check as favorite
+                    <button onClick={this.checkBox}>Bookmark</button>
             </div>
         )
     }
