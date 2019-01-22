@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React from "react";
 import ReactDOM from "react-dom";
 import App from './App';
-import axios from 'axios';
+import { BrowserRouter, Route } from 'react-router-dom';
 function component(){
     let element = document.createElement('div');
 
@@ -25,6 +25,10 @@ document.body.appendChild(component());
 
 const reactTarget = document.getElementById('react-target');
 
-ReactDOM.render(<App />, reactTarget);
+ReactDOM.render((
+    <BrowserRouter>
+         <Route path="/" component={App}/>
+    </BrowserRouter>
+    ), reactTarget);
 
 console.log("webpack bundle works");
