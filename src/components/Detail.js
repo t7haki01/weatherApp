@@ -3,18 +3,58 @@ import axios from 'axios';
 import { Route, Switch, Link } from 'react-router-dom';
 import Main from '../components/Main';
 
-const apiKey = "8aa27dc6b9e28772922e2b6bb363e3d2";
+const apiKey = "e7c2d7e0bc57d08250f0b63cde630511";
+
 
 
 class Detail extends Component{
     constructor(props) {
         super(props);
         this.checkBox = this.checkBox.bind(this)
+        this.state = {
+            isBookmarked: false
+        }
+    }
+
+    componentWillMount(){
+        console.log("Here component will mount! from detail lets check state ", this.state)
+    }
+
+    bookmarkBtn(){
+
+            if(localStorage.getItem("city")!==null){
+                var cities = localStorage.getItem("city").split(" ");
+                var filter = cities.filter(city => city.length !== 0);
+                cities = filter;
+                var isThere = false;
+
+                for(var i = 0; i<cities.length; i++){
+                    if(parseInt(cities[i]) === this.props.location.state.id){
+                        this.setState({isBookmarked:true});
+                        document.getElementById("btnDiv").innerHTML = "Remove Bookmark"
+                        isThere = true;
+                        break;
+                    }
+                }
+                if(!isThere)
+                {
+                    this.setState({isBookmarked:false});
+                    document.getElementById("btnDiv").innerHTML = "Add Bookmark"
+                }
+            }
+            else{
+                this.setState({isBookmarked:false});
+                document.getElementById("btnDiv").innerHTML = "Add Bookmark"        
+            }
     }
 
    checkBox(){
+       if(!this.state.isBookmarked){
             if(localStorage.getItem("city")!==null){
                 var cities = localStorage.getItem("city").split(" ");
+                var filter = cities.filter(city => city.length !== 0);
+                cities = filter;
+
                 var cityInString = "";
                 for(var i = 0; i<cities.length; i++){
                     var fav = cities[i] + " ";
@@ -27,14 +67,28 @@ class Detail extends Component{
                 var fav = this.props.location.state.id + " ";
                 localStorage.setItem("city", fav);
             }
-        
+            this.setState({isBookmarked:true});
+            document.getElementById("btnDiv").innerHTML = "Remove Bookmark"
+        }
+        else{
+            var cities = localStorage.getItem("city").split(" ");
+            var filter = cities.filter(city => city.length !== 0);
+                cities = filter;
+
+            var cityInString = "";
+            for(var i = 0; i<cities.length; i++){
+                if(parseInt(cities[i])!==this.props.location.state.id){
+                    var fav = cities[i] + " ";
+                    cityInString += fav;                     
+                }
+            }
+            localStorage.setItem("city", cityInString);
+            this.setState({isBookmarked:false});
+            document.getElementById("btnDiv").innerHTML = "Add Bookmark"
+        }        
     }
 
-
-    
-
-    componentDidMount (){
-            console.log(this.props.location)
+    getWeatherDetail (){
 
             var city = this.props.location.state.id;
             const url = "http://api.openweathermap.org/data/2.5/forecast?id="+city+"&APPID="+apiKey+"&units=metric";
@@ -59,6 +113,12 @@ class Detail extends Component{
             .catch(err=>{
                 console.log(err)
             })
+    }
+
+    componentDidMount(){
+        console.log("Here component did mount! from detail lets check state ", this.state)
+        this.getWeatherDetail()
+        this.bookmarkBtn()
     }
 
     render(){
@@ -98,7 +158,7 @@ class Detail extends Component{
                             Humidity:
                             </div>
                         </div>Click Here to check as favorite
-                    <button onClick={this.checkBox}>Bookmark</button>
+                    <button onClick={this.checkBox}><div id="btnDiv">Option</div></button>
             </div>
         )
     }

@@ -4,8 +4,7 @@ import cityList from '../../www/city.list.json';
 import Detail from './Detail';
 import Favorite from './Favorite';
 import { Route, Switch, Link } from 'react-router-dom';
-const apiKey = "8aa27dc6b9e28772922e2b6bb363e3d2";
-
+const apiKey = "e7c2d7e0bc57d08250f0b63cde630511";
 
 class Main extends Component{
 
@@ -20,7 +19,8 @@ class Main extends Component{
         };
       }
 
-      componentDidMount() {
+      bookmarkCheck() {
+          document.getElementById("resultLink").style.display = "none";
           if(localStorage.getItem("city")!==null){
             var citiesInString = localStorage.getItem("city");
             var citiesInArray = citiesInString.split(" ");
@@ -31,24 +31,28 @@ class Main extends Component{
                 }
             }
             citiesInArray = filteredArray ;
+            var multiCity = "";
+            for(var j = 0; j<citiesInArray.length; j++){
+                multiCity += citiesInArray[j] + ","
+            }
+            multiCity = multiCity.substring(0, multiCity.length-1);
 
-
-            var obj = [];
             if(citiesInArray.length>0){
-                for(var i = 0; i<citiesInArray.length; i++){
-                    var url = "http://api.openweathermap.org/data/2.5/forecast?id="+citiesInArray[i]+"&APPID="+apiKey+"&units=metric";
+                    var url = "http://api.openweathermap.org/data/2.5/group?id="+multiCity+"&APPID="+apiKey+"&units=metric";
                     axios.get(url)
-                    .then(function(res){
-                        // document.getElementById(citiesInArray[i]).innerHTML = res.data["city"]["name"] + ", " + res.data["list"][0]["main"]["temp"];
-                        obj.push(res.data["city"]["name"], res.data["list"][0]["main"]["temp"])                                  
+                    .then( res => {
+                        const fav = res.data.list;
+                        // {
+                        //     "city": res.data["city"]["name"], 
+                        //     "temp": res.data["list"][0]["main"]["temp"], 
+                        //     "id": res.data["city"]["id"]
+                        // }
+                        this.setState({ fav });
+                        console.log(res.data);
                     })
                     .catch(err=>{
                         console.log(err)
-                    })                
-                }
-                this.setState({fav: obj});
-                console.log("obj ", obj)
-                console.log("fav state ", JSON.stringify(this.state.fav))
+                    })
               }
           }
       }
@@ -78,6 +82,7 @@ class Main extends Component{
                 .then(function(res){
                     console.log(res.data);
                     document.getElementById("result").innerHTML = res.data["city"]["name"] + ", " + res.data["list"][0]["main"]["temp"];
+                    document.getElementById("resultLink").style.display = "block";
                 })
                 .catch(err=>{
                     console.log(err)
@@ -87,6 +92,13 @@ class Main extends Component{
                 document.getElementById("result").innerHTML = "There is no city with that name" + this.state.city;
             }
     }
+
+    componentDidMount(){
+        // setTimeout(() => {
+            this.bookmarkCheck();
+        // }, 1000)
+    }
+
     render(){
 
         return(
@@ -97,7 +109,11 @@ class Main extends Component{
                 <Switch>
                     <Route path="/detail" exact component={Detail}/>
                 </Switch>
-                <Link to={{pathname:'/detail', state:{id: this.state.id}}}><div title="Click Here to check detail" id="result">Here comes the result</div></Link>
+                <div id="result"></div>
+                <div title="Click Here to check detail" id="resultLink">
+                    <Link to={{pathname:'/detail', state:{id: this.state.id}}}>More</Link>
+                </div>
+
 
                 <br/>
                 <div>
@@ -105,7 +121,9 @@ class Main extends Component{
                         <div>
                             <div className="row justify-content-center">
                                 <div className="col-3">
-                                <Link to={{pathname:'/detail', state:{id: list}}}><div title="Click Here to check detail" id={list}>{list}</div></Link>
+                                <Link to={{pathname:'/detail', state:{id: list.id}}}><div title="Click Here to check detail" id={list.id}>more</div></Link>
+                                <div>City: {list.name}</div>
+                                <div>Temperatue: {list.main.temp}</div>
                                 </div>
                             </div>
                         </div>
