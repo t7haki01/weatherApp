@@ -2,9 +2,14 @@ import React, {Component} from 'react';
 import axios from 'axios';
 import cityList from '../../www/city.list.json';
 import Detail from './Detail';
-import Favorite from './Favorite';
 import { Route, Switch, Link } from 'react-router-dom';
 const apiKey = "e7c2d7e0bc57d08250f0b63cde630511";
+
+var cityData = [];
+for(var i = 0; i<cityList.length; i++){
+    cityData.push(cityList[i]["name"]);
+}
+
 
 class Main extends Component{
 
@@ -42,11 +47,6 @@ class Main extends Component{
                     axios.get(url)
                     .then( res => {
                         const fav = res.data.list;
-                        // {
-                        //     "city": res.data["city"]["name"], 
-                        //     "temp": res.data["list"][0]["main"]["temp"], 
-                        //     "id": res.data["city"]["id"]
-                        // }
                         this.setState({ fav });
                         console.log(res.data);
                     })
@@ -56,12 +56,6 @@ class Main extends Component{
               }
           }
       }
-
-    onChange (e) {
-        const state = this.state;
-        state[e.target.name] = e.target.value;
-        this.setState(state);
-    };
 
     getData (){
             var isThere = false;
@@ -94,16 +88,41 @@ class Main extends Component{
     }
 
     componentDidMount(){
-        // setTimeout(() => {
             this.bookmarkCheck();
-        // }, 1000)
     }
+
+    onChange (e) {
+        var dataList = document.getElementById("listOfCity");
+        while(dataList.firstChild){
+            dataList.removeChild(dataList.firstChild);
+        }
+
+        const state = this.state;
+        state[e.target.name] = e.target.value;
+
+
+        if(e.target.value.length > 0){
+            var maxNum = 0;
+            for(var i = 0; i < cityData.length; i++){
+                if(cityData[i].slice(0, e.target.value.length).toUpperCase() === e.target.value.toUpperCase() && maxNum < 20){
+                    var option = document.createElement('option');
+                    option.value = cityData[i];
+                    dataList.appendChild(option);
+                    maxNum ++;
+                }
+            }
+        }
+        this.setState(state);
+        console.log(e.target.value);
+    };
 
     render(){
 
         return(
             <div>
-                <input name="city" id="city" onChange={this.onChange}></input>
+                <input list="listOfCity" name="city" id="city" onChange={this.onChange}></input>
+                <datalist id="listOfCity">
+                </datalist>
                 <button onClick={this.getData}>Search</button>                
                 
                 <Switch>
@@ -130,7 +149,6 @@ class Main extends Component{
                     )):<div></div>}
                 </div>
             </div>
-            
         )
     }
 }

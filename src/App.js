@@ -1,10 +1,7 @@
 import React, {Component} from 'react';
 import Detail from './components/Detail';
 import Main from './components/Main';
-import axios from 'axios';
-import cityList from '../www/city.list.json';
-import { Route, Switch, NavLink, Redirect } from 'react-router-dom';
-const apiKey = "8aa27dc6b9e28772922e2b6bb363e3d2";
+import { Route, Switch, Redirect } from 'react-router-dom';
 
 
 class App extends Component{
