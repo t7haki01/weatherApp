@@ -12,13 +12,22 @@ module.exports = {
         rules: [
             {
                 test: /\.css$/,
-                use: [ 'style-loader', 'css-loader']
+                use: [ "css-loader", "style-loader"],
+                include: [
+                    path.join(__dirname, "/src/main/js"),
+                    /node_modules\/bootstrap/
+                ]
             },
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
                 use:{ loader: "babel-loader"}
-            }
+            },
+            // { 
+            //     test: /\.scss/, 
+            //     exclude: /node_modules/, 
+            //     loader: 'style!css?modules&importLoaders=2&sourceMap&localIdentName=[local]___[hash:base64:5]!autoprefixer?browsers=last 2 version!sass?outputStyle=expanded&sourceMap&includePaths[]=node_modules/compass-mixins/lib'
+            // }
         ]
     }
 };

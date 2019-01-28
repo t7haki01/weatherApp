@@ -11,10 +11,15 @@
   "license": "Apache-2.0",
   "dependencies": {
     "axios": "^0.18.0",
+    "bootstrap": "^4.2.1",
     "cordova-android": "^7.1.4",
     "cordova-browser": "^5.0.4",
     "cordova-plugin-whitelist": "^1.3.3",
-    "react-router-dom": "^4.3.1"
+    "datalist-polyfill": "^1.23.3",
+    "jquery": "^1.9.1",
+    "react-autocomplete": "^1.8.1",
+    "react-router-dom": "^4.3.1",
+    "react-select": "^2.3.0"
   },
   "cordova": {
     "plugins": {
@@ -26,16 +31,17 @@
     ]
   },
   "devDependencies": {
-    "lodash": "^4.17.11",
     "@babel/core": "^7.2.2",
     "@babel/polyfill": "^7.2.5",
-    "@babel/preset-env": "^7.2.3",
+    "@babel/preset-env": "^7.3.1",
     "@babel/preset-react": "^7.0.0",
     "babel-loader": "^8.0.5",
     "css-loader": "^2.1.0",
-    "webpack": "^4.29.0",
-    "webpack-cli": "^3.2.1",
+    "lodash": "^4.17.11",
     "react": "^16.7.0",
-    "react-dom": "^16.7.0"
+    "react-dom": "^16.7.0",
+    "style-loader": "^0.23.1",
+    "webpack": "^4.29.0",
+    "webpack-cli": "^3.2.1"
   }
 }

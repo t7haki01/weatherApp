@@ -98,14 +98,21 @@ class Detail extends Component{
                 //For the focusing on the returning it as possible as i can now deplying like this 
                 //but personally do not like and i think it is not so good way
                 // this.setState({ info : res.data });
-                console.log(res.data["list"][0]["main"]["temp"]);
+                console.log(res.data);
 
                 document.getElementById("pressure").innerHTML += res.data.list[0].main.pressure
                 document.getElementById("temp").innerHTML += res.data.list[0].main.temp
                 document.getElementById("max_temp").innerHTML += res.data.list[0].main.temp_max
                 document.getElementById("min_temp").innerHTML += res.data.list[0].main.temp_min
                 document.getElementById("humidity").innerHTML += res.data.list[0].main.humidity
-                document.getElementById("city").innerHTML += res.data.city.name
+                document.getElementById("city").innerHTML += res.data.city.name + ", " + res.data.city.country
+
+                document.getElementById("time1").innerHTML = res.data.list[0]['dt_txt'] + " / " + res.data.list[0].main.temp
+                document.getElementById("time2").innerHTML = res.data.list[4]['dt_txt'] + " / " + res.data.list[4].main.temp
+                document.getElementById("time3").innerHTML = res.data.list[8]['dt_txt'] + " / " + res.data.list[8].main.temp
+                document.getElementById("time4").innerHTML = res.data.list[12]['dt_txt'] + " / " + res.data.list[12].main.temp
+                document.getElementById("time5").innerHTML = res.data.list[16]['dt_txt'] + " / " + res.data.list[16].main.temp
+
 
                 // this.setState({name: res.data["city"]["name"]})
                 // document.getElementById("detail").innerHTML = JSON.stringify(res.data)
@@ -128,37 +135,47 @@ class Detail extends Component{
                     <Route path="/" exact component={Main}/>
                 </Switch>
                 <Link to={{pathname:'/', state:{id: ""}}}>Back to main</Link>
-                <div id="detail">Here are the details</div>
-                <div id="city">City: </div>
+
+            <div className="bookMark">
+                <button onClick={this.checkBox}><div id="btnDiv">Option</div></button>
+            </div>
+                
+                <div id="detail"><h3>Here are the details</h3></div>
+                <hr/>
+                <div id="city"><b>Place</b>: </div>
                         <div className="row justify-content-center">
                             <div id="pressure" className="col-3">
-                            Pressure:
+                            <b>Pressure</b>:
                             </div>
                         </div>
                         <div className="row justify-content-center">
                             <div id="temp" className="col">
-                            Temprature:
+                            <b>Temprature</b>:
                             </div>
                         </div>
 
                         <div className="row justify-content-center">
                             <div id="max_temp" className="col">
-                            Max Temprature
+                            <b>Max Temprature</b>
                             </div>
                         </div>
 
                         <div className="row justify-content-center">
                             <div className="col" id="min_temp">
-                            Min Temprature:
+                            <b>Min Temprature</b>:
                             </div>
                         </div>
 
                         <div className="row justify-content-center">
                             <div className="col" id="humidity">
-                            Humidity:
+                            <b>Humidity</b>:
                             </div>
-                        </div>Click Here to check as favorite
-                    <button onClick={this.checkBox}><div id="btnDiv">Option</div></button>
+                        </div>
+                        <div id="time1"></div>
+                        <div id="time2"></div>
+                        <div id="time3"></div>
+                        <div id="time4"></div>
+                        <div id="time5"></div>
             </div>
         )
     }

@@ -3,6 +3,8 @@ import React from "react";
 import ReactDOM from "react-dom";
 import App from './App';
 import { BrowserRouter, Route } from 'react-router-dom';
+// import 'bootstrap/dist/css/bootstrap.css';
+
 function component(){
     let element = document.createElement('div');
 
